@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  app:
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${RDS_HOST}:5432/prod_db
+      SPRING_DATASOURCE_USERNAME: ${RDS_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${RDS_PASSWORD}
+
+  db:
+    image: postgres:15.3
+    container_name: postgres_prod_database
+    environment:
+      POSTGRES_DB: prod_db
+      POSTGRES_USER: prod_user
+      POSTGRES_PASSWORD: prod_password
+    ports:
+      - "${DB_PORT}:5432"
+    networks:
+      - app_network

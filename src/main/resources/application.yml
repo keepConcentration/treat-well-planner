@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: treat-well-planner
+  profiles:
+    active: ${string.profiles.active}
+  web:
+    locale-resolver: fixed
+    locale: ko_KR
+    resources:
+      add-mappings: true
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs           # API 문서 경로 수정
+    default-produces-media-type: application/json
+  swagger-ui:
+    enable: true
+    path: /swagger-ui.html       # Swagger UI 경로 수정
+    display-query-params-without-oauth2: true
+    operations-sorter: method   # 메서드 이름 기준으로 정렬
+    tags-sorter: alpha          # 태그 이름 기준으로 정렬
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true

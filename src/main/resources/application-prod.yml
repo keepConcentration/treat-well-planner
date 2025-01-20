@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://your-prod-db-instance.rds.amazonaws.com:5432/production_db
+    username: prod_user
+    password: prod_password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate # 운영 환경에서 validate로 설정해 스키마가 정확한지 검증만 수행
+    show-sql: false
+  flyway:
+    enabled: true
+  hikari:
+    maximum-pool-size: 20
+    minimum-idle: 10
+    idle-timeout: 30000
+    connection-timeout: 30000
+    max-lifetime: 1800000
+
+cors:
+  allowed-origins:
+    - https://treat-well-planner.com

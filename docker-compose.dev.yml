@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  app:
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/dev_db
+      SPRING_DATASOURCE_USERNAME: dev_user
+      SPRING_DATASOURCE_PASSWORD: dev_password
+
+  db:
+    image: postgres:15.3
+    container_name: postgres_dev_database
+    environment:
+      POSTGRES_DB: dev_db
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_password
+    ports:
+      - "${DB_PORT}:5432"
+    networks:
+      - app_network

@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/development_db
+    username: dev_user
+    password: dev_password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  flyway:
+    enabled: true # 개발 환경에서는 Flyway를 사용.
+  hikari:
+    maximum-pool-size: 10
+    minimum-idle: 5
+    idle-timeout: 30000
+    connection-timeout: 30000
+    max-lifetime: 1800000
+cors:
+  allowed-origins:
+    - https://dev.treat-well-planner.com

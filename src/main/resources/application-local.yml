@@ -1,0 +1,43 @@
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 10000
+      connection-timeout: 30000
+      pool-name: HikariPool
+      jdbc-url: jdbc:h2:mem:treat_well_planner;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      username: sa
+      driver-class-name: org.h2.Driver
+
+logging:
+  level:
+    org.springdoc: DEBUG
+#    name: treat_well_planner
+#    url: jdbc:h2:mem:treat_well_planner;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop    # 애플리케이션 실행마다 테이블을 생성 후 삭제
+    show-sql: true             # 쿼리를 출력
+    properties:
+      hibernate:
+      #  default_schema: PUBLIC
+        format_sql: true
+        connection:
+          use_unique_db_name: false
+  h2:
+    console:
+      enabled: true            # H2 콘솔 활성화
+      path: /h2-console          # H2 Console 접근 URI
+  flyway:
+    enabled: false
+   # validate-on-migrate: true   # 데이터베이스 상태를 항상 검증 (엔티티와 동기화)
+   # baseline-on-migrate: true  # 기존 DB 초기화 상태를 Flyway 기본 마이그레이션으로 간주
+
+cors:
+  allowed-origins:
+    - http://localhost:8080
+    - http://127.0.0.1:8080

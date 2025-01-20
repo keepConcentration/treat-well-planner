@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  app:
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_DATASOURCE_URL: jdbc:h2:mem:treat_well_planner
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: ""
+
+  db:
+    image: oscarfonts/h2:latest
+    container_name: h2_database
+    ports:
+      - "9092:9092" # H2 서버용 포트 (필요 시 제거 가능)
+    networks:
+      - app_network
