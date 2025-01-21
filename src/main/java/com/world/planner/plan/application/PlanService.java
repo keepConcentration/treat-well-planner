@@ -1,5 +1,6 @@
 package com.world.planner.plan.application;
 
+import com.world.planner.global.util.ValidRecurrenceRuleUtils;
 import com.world.planner.plan.domain.Plan;
 import com.world.planner.plan.domain.PlanDomainService;
 import com.world.planner.plan.domain.recurrence.RecurrenceRuleType;
@@ -12,6 +13,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,8 +39,27 @@ public class PlanService {
    */
   public UUID createPlan(String title, String description, LocalDate startDate, LocalDate endDate) {
     Plan plan = Plan.create(title, description, startDate, endDate);
+    // 유효성 검사
+    if (!ValidRecurrenceRuleUtils.isValidDateRange(plan.getStartDate(), plan.getEndDate())) {
+      throw new IllegalArgumentException("Invalid date range");
+    }
+
     planRepository.save(plan);
     return plan.getId();
+  }
+
+  /**
+   * "언젠가 할 일"로 표시된 Plan 목록 조회
+   *
+   * @return PlanDetailResponse의 리스트
+   *         - startDate와 endDate가 모두 null인 Plan 목록을 PlanDetailResponse로 변환하여 반환
+   */
+
+  public List<PlanDetailResponse> getSomedayPlans() {
+    List<Plan> plans = planRepository.findPlansWithoutDates();
+    return plans.stream()
+            .map(PlanDetailResponse::fromEntity) // DTO로 변환
+            .collect(Collectors.toList());
   }
 
   /**
@@ -163,13 +185,7 @@ public class PlanService {
       case WEEKLY -> recurrenceRuleService.createWeeklyRule(interval, daysOfWeek);
       case MONTHLY -> recurrenceRuleService.createMonthlyRule(interval, daysOfWeek, daysOfMonth);
       case YEARLY -> recurrenceRuleService.createYearlyRule(interval, monthsOfYear, daysOfWeek, daysOfMonth);
-      default -> throw new IllegalArgumentException("Invalid rule type: " + ruleType);
     };
   }
 
-  public void validateRecurrenceRule(String ruleType) {
-    if (!RecurrenceRuleType.isValid(ruleType)) {
-      throw new IllegalArgumentException("Invalid Recurrence Rule Type: " + ruleType);
-    }
-  }
 }

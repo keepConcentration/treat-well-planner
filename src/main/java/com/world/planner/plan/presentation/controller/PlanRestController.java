@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -143,4 +144,18 @@ public class PlanRestController {
     PlanDetailResponse updatedPlan = planService.removeRecurrenceRule(planId);
     return ResponseEntity.ok(updatedPlan);
   }
+
+  /**
+   * "언젠가 할 일"로 표시된 Plan 조회 API
+   *
+   * @return ResponseEntity에 담긴 PlanDetailResponse 리스트
+   *         - startDate와 endDate가 null인 "언젠가 할 일"로 표시된 계획 목록 반환
+   */
+
+  @GetMapping("/plans/someday")
+  @Operation(summary = "언젠가 할 일 조회", description = "startDate와 endDate가 없어서 '언젠가 할 일'로 표시된 계획(Plan)의 목록을 조회합니다.")
+  public ResponseEntity<List<PlanDetailResponse>> getSomedayPlans() {
+    return ResponseEntity.ok(planService.getSomedayPlans());
+  }
+
 }

@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS plans (
   id UUID PRIMARY KEY,
   title VARCHAR(100) NOT NULL,
   description VARCHAR(500) NOT NULL,
-  start_date DATE NOT NULL,
+  start_date DATE NULL,
   end_date DATE NULL,
   recurrence_rule_id UUID,
   insert_id VARCHAR(255) NOT NULL,

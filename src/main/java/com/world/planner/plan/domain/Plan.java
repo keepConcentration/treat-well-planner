@@ -33,7 +33,7 @@ public class Plan extends BaseEntity {
   @Column(nullable = false, length = 500)
   private String description;
 
-  @Column(name = "start_date", nullable = false)
+  @Column(name = "start_date")
   private LocalDate startDate;
 
   @Column(name = "end_date")
@@ -76,6 +76,10 @@ public class Plan extends BaseEntity {
       throw new IllegalArgumentException("Invalid recurrence rule");
     }
     this.recurrenceRule = rule;
+  }
+
+  public boolean isSomeday() {
+    return startDate == null && endDate == null;
   }
 
   public void removeRecurrenceRule() {
