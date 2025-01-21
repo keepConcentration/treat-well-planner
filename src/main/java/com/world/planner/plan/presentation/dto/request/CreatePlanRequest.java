@@ -13,7 +13,6 @@ public class CreatePlanRequest {
   @Schema(description = "Plan 제목", example = "Weekly Meeting")
   private String title;
 
-  @NotBlank(message = "Plan 설명은 반드시 입력해야 합니다.")
   @Schema(description = "Plan 설명", example = "Discussion about project updates")
   private String description;
 
