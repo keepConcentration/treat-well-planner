@@ -2,16 +2,11 @@ package com.world.planner.plan.domain;
 
 import com.world.planner.global.event.BaseEntity;
 import com.world.planner.plan.domain.recurrence.RecurrenceRule;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,6 +27,14 @@ public class Plan extends BaseEntity {
 
   @Column(nullable = false, length = 500)
   private String description;
+
+  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @JoinTable(
+          name = "plan_tags",
+          joinColumns = @JoinColumn(name = "plan_id"),
+          inverseJoinColumns = @JoinColumn(name = "tag_id")
+  )
+  private Set<Tag> tags = new HashSet<>();
 
   @Column(name = "start_date")
   private LocalDate startDate;
@@ -85,4 +88,19 @@ public class Plan extends BaseEntity {
   public void removeRecurrenceRule() {
     this.recurrenceRule = null;
   }
+
+  public void addTag(Tag tag) {
+    if (tag != null) {
+      tags.add(tag);
+      tag.getPlans().add(this); // 양방향 관계 설정
+    }
+  }
+
+  public void removeTag(Tag tag) {
+    if (tag != null) {
+      tags.remove(tag);
+      tag.getPlans().remove(this); // 양방향 관계 제거
+    }
+  }
+
 }
