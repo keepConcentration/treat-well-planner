@@ -1,22 +1,14 @@
 package com.world.planner.global.event;
 
-import java.time.LocalDateTime;
+public interface Auditable<UserID, Timestamp> {
 
-public interface Auditable {
+  UserID getCreatedBy();
+  Timestamp getCreatedAt();
+  UserID getUpdatedBy();
+  Timestamp getUpdatedAt();
 
-  String getCreatedBy();
-
-  LocalDateTime getCreatedAt();
-
-  String getUpdatedBy();
-
-  LocalDateTime getUpdatedAt();
-
-  void setCreatedBy(String createdBy);
-
-  void setCreatedAt(LocalDateTime createdAt);
-
-  void setUpdatedBy(String updatedBy);
-
-  void setUpdatedAt(LocalDateTime updatedAt);
+  void setCreatedBy(UserID createdBy);
+  void setCreatedAt(Timestamp createdAt);
+  void setUpdatedBy(UserID updatedBy);
+  void setUpdatedAt(Timestamp updatedAt);
 }

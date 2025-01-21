@@ -11,6 +11,7 @@ import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "plans")
@@ -45,6 +46,12 @@ public class Plan extends BaseEntity {
   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "recurrence_rule_id")
   private RecurrenceRule recurrenceRule;
+
+  // 카테고리 설정
+  @Setter
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "category_id")
+  private Category category;
 
   private Plan(String title, String description, LocalDate startDate, LocalDate endDate) {
     if (endDate != null && startDate.isAfter(endDate)) {
