@@ -26,7 +26,7 @@ public class Plan extends BaseEntity {
   @Column(nullable = false, length = 100)
   private String title;
 
-  @Column(nullable = false, length = 500)
+  @Column(length = 500)
   private String description;
 
   @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS recurrence_rule (
 CREATE TABLE IF NOT EXISTS plans (
   id UUID PRIMARY KEY,
   title VARCHAR(100) NOT NULL,
-  description VARCHAR(500) NOT NULL,
+  description VARCHAR(500) NULL,
   start_date DATE NULL,
   end_date DATE NULL,
   recurrence_rule_id UUID,
