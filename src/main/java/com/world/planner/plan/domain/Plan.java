@@ -1,11 +1,13 @@
 package com.world.planner.plan.domain;
 
 import com.world.planner.global.event.BaseEntity;
+import com.world.planner.member.domain.Member;
 import com.world.planner.plan.domain.recurrence.RecurrenceRule;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AccessLevel;
@@ -22,6 +24,10 @@ public class Plan extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "member_id", nullable = false)
+  private Member owner;
 
   @Column(nullable = false, length = 100)
   private String title;
@@ -53,6 +59,9 @@ public class Plan extends BaseEntity {
   @JoinColumn(name = "category_id")
   private Category category;
 
+  @Column(name = "completed", nullable = false)
+  private boolean completed = false;
+
   private Plan(String title, String description, LocalDate startDate, LocalDate endDate) {
     if (endDate != null && startDate.isAfter(endDate)) {
       throw new IllegalArgumentException("Start date must be before or equal to the end date.");
@@ -63,12 +72,15 @@ public class Plan extends BaseEntity {
     this.endDate = endDate;
   }
 
-  public static Plan create(String title, String description, LocalDate startDate, LocalDate endDate) {
-    return new Plan(title, description, startDate, endDate);
-  }
+  public static Plan create(Member owner, String title, String description, LocalDate startDate, LocalDate endDate, Category category) {
+    if (endDate != null && startDate != null && startDate.isAfter(endDate)) {
+      throw new IllegalArgumentException("Start date must be before or equal to the end date.");
+    }
 
-  public boolean hasRecurrenceRule() {
-    return recurrenceRule != null;
+    Plan plan = new Plan(title, description, startDate, endDate);
+    plan.owner = owner; // 소유자 설정
+    plan.category = category; // 카테고리 설정
+    return plan;
   }
 
   public void updateDetails(String title, String description, LocalDate startDate, LocalDate endDate) {
@@ -96,6 +108,11 @@ public class Plan extends BaseEntity {
     this.recurrenceRule = null;
   }
 
+  // RecurrenceRule 존재 여부 확인
+  public boolean hasRecurrenceRule() {
+    return this.recurrenceRule != null;
+  }
+
   public void addTag(Tag tag) {
     if (tag != null) {
       tags.add(tag);
@@ -108,6 +125,35 @@ public class Plan extends BaseEntity {
       tags.remove(tag);
       tag.getPlans().remove(this); // 양방향 관계 제거
     }
+  }
+
+  // Plan에 연결된 태그 이름 조회
+  public List<String> getTagNames() {
+    return tags.stream()
+        .map(Tag::getName)
+        .toList();
+  }
+
+  public void markAsCompleted() {
+    if (this.completed) {
+      throw new IllegalStateException("Plan is already completed.");
+    }
+    this.completed = true;
+  }
+
+  public void markAsIncomplete() {
+    if (!this.completed) {
+      throw new IllegalStateException("Plan is not completed.");
+    }
+    this.completed = false;
+  }
+
+  // "완료 여부"에 따른 비즈니스 규칙이나 로직 확장 가능
+  public boolean isActive(LocalDate date) {
+    if (completed) {
+      return false; // 완료된 Plan은 비활성 상태로 간주
+    }
+    return (startDate == null || !date.isBefore(startDate)) && (endDate == null || !date.isAfter(endDate));
   }
 
 }

@@ -11,6 +11,15 @@ public class ValidRecurrenceRuleUtils {
 
   /**
    * 시작 날짜와 종료 날짜가 유효한지 확인한다.
+   */
+  public static void validateDateRange(LocalDate startDate, LocalDate endDate) {
+    if (!isValidDateRange(startDate, endDate)) {
+      throw new IllegalArgumentException("Invalid date range");
+    }
+  }
+
+  /**
+   * 시작 날짜와 종료 날짜가 유효한지 확인한다.
    * - 둘 다 null이면 "언젠가 할 일"로 간주, 유효.
    * - 둘 중 하나만 null이거나, startDate가 endDate 이후인 경우는 무효.
    */

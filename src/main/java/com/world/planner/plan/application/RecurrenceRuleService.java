@@ -11,13 +11,28 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RecurrenceRuleService {
 
+  public RecurrenceRule createRecurrenceRule(
+      RecurrenceRuleType ruleType,
+      int interval,
+      List<DayOfWeek> daysOfWeek,
+      List<Integer> daysOfMonth,
+      List<Integer> monthsOfYear
+  ) {
+    return switch (ruleType) {
+      case DAILY -> createDailyRule(interval);
+      case WEEKLY -> createWeeklyRule(interval, daysOfWeek);
+      case MONTHLY -> createMonthlyRule(interval, daysOfWeek, daysOfMonth);
+      case YEARLY -> createYearlyRule(interval, monthsOfYear, daysOfWeek, daysOfMonth);
+    };
+  }
+
   /**
    * DailyRule 생성
    *
    * @param interval 반복 주기
    * @return 생성된 DailyRule
    */
-  public DailyRule createDailyRule(int interval) {
+  private DailyRule createDailyRule(int interval) {
     validateInterval(interval);
     return (DailyRule) RecurrenceRuleFactory.createDailyRule(interval);
   }
@@ -29,7 +44,7 @@ public class RecurrenceRuleService {
    * @param daysOfWeek 반복 요일 리스트
    * @return 생성된 WeeklyRule
    */
-  public WeeklyRule createWeeklyRule(int interval, List<DayOfWeek> daysOfWeek) {
+  private WeeklyRule createWeeklyRule(int interval, List<DayOfWeek> daysOfWeek) {
     validateInterval(interval);
     validateDaysOfWeek(daysOfWeek);
     return (WeeklyRule) RecurrenceRuleFactory.createWeeklyRule(interval, daysOfWeek);
@@ -43,7 +58,7 @@ public class RecurrenceRuleService {
    * @param daysOfMonth  매달 반복되는 날짜 리스트 (선택적)
    * @return 생성된 MonthlyRule
    */
-  public MonthlyRule createMonthlyRule(int interval, List<DayOfWeek> daysOfWeek, List<Integer> daysOfMonth) {
+  private MonthlyRule createMonthlyRule(int interval, List<DayOfWeek> daysOfWeek, List<Integer> daysOfMonth) {
     validateInterval(interval);
     validateDaysOfWeekOrDaysOfMonth(daysOfWeek, daysOfMonth);
     return (MonthlyRule) RecurrenceRuleFactory.createMonthlyRule(interval, daysOfWeek, daysOfMonth);
@@ -58,7 +73,7 @@ public class RecurrenceRuleService {
    * @param daysOfMonth  매년에 반복되는 날짜 리스트 (선택적)
    * @return 생성된 YearlyRule
    */
-  public YearlyRule createYearlyRule(
+  private YearlyRule createYearlyRule(
       int interval,
       List<Integer> monthsOfYear,
       List<DayOfWeek> daysOfWeek,
