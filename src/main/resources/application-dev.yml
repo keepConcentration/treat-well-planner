@@ -19,3 +19,14 @@ spring:
 cors:
   allowed-origins:
     - https://dev.treat-well-planner.com
+
+logging:
+  level:
+    org:
+      springdoc: DEBUG
+      springframework:
+        security: DEBUG
+
+kakao:
+  auth:
+    redirect-uri: https://dev.treat-well-planner.com/auth/kakao/callback
