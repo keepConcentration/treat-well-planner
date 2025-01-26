@@ -3,6 +3,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
+import java.util.UUID;
 import lombok.Getter;
 
 @Getter
@@ -21,4 +22,8 @@ public class CreatePlanRequest {
 
   @Schema(description = "Plan 종료 날짜", example = "2023-12-05")
   private LocalDate endDate;
+
+  @Schema(description = "Plan 카테고리", example = "Work")
+  private UUID category;
+
 }

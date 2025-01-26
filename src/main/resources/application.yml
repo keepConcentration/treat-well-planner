@@ -31,3 +31,5 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+jwt:
+  secret-key: WjdX/OI18DWmUGOl+U+FmRnYsc/bdFCrlwbQLpvPesnS6VLN2oU3Ps3xTDkcb8JriAP8UmlA5+Mla5YWARg8Sg==

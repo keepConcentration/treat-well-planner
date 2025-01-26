@@ -1,3 +1,16 @@
+-- ============================
+-- Create members Table
+-- ============================
+CREATE TABLE IF NOT EXISTS members (
+  id UUID PRIMARY KEY,                                 -- UUID 고유 ID
+  email VARCHAR(255) NOT NULL UNIQUE,                 -- 이메일 (유니크)
+  name VARCHAR(100) NOT NULL,                         -- 이름
+  insert_id UUID NOT NULL,                            -- 생성자 ID
+  insert_date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, -- 생성일시
+  update_id UUID NOT NULL,                            -- 수정자 ID
+  update_date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL  -- 수정일시
+);
+
 -- ===========================
 -- Create categories Table
 -- ===========================
@@ -102,3 +115,4 @@ CREATE INDEX IF NOT EXISTS idx_tags_name ON tags(name); -- 태그 이름 검색�
 CREATE INDEX IF NOT EXISTS idx_plans_category ON plans(category_id); -- 플랜별 카테고리 인덱스
 CREATE INDEX IF NOT EXISTS idx_plans_date_range ON plans(start_date, end_date);
 CREATE INDEX IF NOT EXISTS idx_recurrence_rule_type ON recurrence_rule(rule_type);
+CREATE INDEX IF NOT EXISTS idx_members_email ON members(email); -- 이메일 검색 속도 향상

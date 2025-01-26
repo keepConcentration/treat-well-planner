@@ -29,7 +29,6 @@ public class PlanRestController {
    * Plan 생성
    *
    * @param request Plan 생성 요청
-   * @return 생성된 Plan ID의 응답
    */
   @PostMapping
   @Operation(summary = "Plan 생성", description = "새로운 Plan을 추가합니다.")
@@ -38,14 +37,14 @@ public class PlanRestController {
         request.getTitle(),
         request.getDescription(),
         request.getStartDate(),
-        request.getEndDate() // 변경된 필드 적용
+        request.getEndDate(),
+        request.getCategory()
     );
 
-    // Location 헤더를 설정하여 생성된 자원의 URI를 반환
     return ResponseEntity
         .status(HttpStatus.CREATED)
-        .header("Location", "/api/plans/" + planId) // 생성된 Plan의 접근 경로
-        .build();         // 생성된 ID를 포함한 응답 바디
+        .header("Location", "/api/plans/" + planId)
+        .build();
   }
 
   /**
@@ -53,22 +52,21 @@ public class PlanRestController {
    *
    * @param planId  수정할 Plan의 ID
    * @param request Plan 수정 요청
-   * @return 수정된 PlanDetailResponse
    */
   @PutMapping("/{planId}")
   @Operation(summary = "Plan 수정", description = "특정 Plan의 내용을 수정합니다.")
-  public ResponseEntity<PlanDetailResponse> updatePlan(
+  public ResponseEntity<Void> updatePlan(
       @PathVariable UUID planId,
       @Valid @RequestBody UpdatePlanRequest request
   ) {
-    PlanDetailResponse updatedPlan = planService.updatePlan(
+    planService.updatePlan(
         planId,
         request.getTitle(),
         request.getDescription(),
         request.getStartDate(), // 변경된 필드 적용
         request.getEndDate()    // 변경된 필드 적용
     );
-    return ResponseEntity.ok(updatedPlan);
+    return ResponseEntity.noContent().build();
   }
 
   /**
@@ -113,15 +111,14 @@ public class PlanRestController {
    *
    * @param planId      Plan ID
    * @param ruleRequest RecurrenceRule 생성 요청
-   * @return 수정된 PlanDetailResponse
    */
   @PostMapping("/{planId}/recurrence-rule")
   @Operation(summary = "반복 규칙 추가 또는 수정", description = "특정 Plan에 반복 규칙을 추가 또는 수정합니다.")
-  public ResponseEntity<PlanDetailResponse> addOrUpdateRecurrenceRule(
+  public ResponseEntity<Void> addOrUpdateRecurrenceRule(
       @PathVariable UUID planId,
       @Valid @RequestBody RecurrenceRuleRequest ruleRequest
   ) {
-    PlanDetailResponse updatedPlan = planService.addOrUpdateRecurrenceRule(
+    planService.addOrUpdateRecurrenceRule(
         planId,
         ruleRequest.getRuleType(),
         ruleRequest.getInterval(),
@@ -129,20 +126,19 @@ public class PlanRestController {
         ruleRequest.getDaysOfMonth(),
         ruleRequest.getMonthsOfYear()
     );
-    return ResponseEntity.ok(updatedPlan);
+    return ResponseEntity.noContent().build();
   }
 
   /**
    * Plan에서 RecurrenceRule 삭제
    *
    * @param planId Plan ID
-   * @return 수정된 PlanDetailResponse
    */
   @DeleteMapping("/{planId}/recurrence-rule")
   @Operation(summary = "반복 규칙 삭제", description = "특정 Plan의 반복 규칙을 삭제합니다.")
-  public ResponseEntity<PlanDetailResponse> removeRecurrenceRule(@PathVariable UUID planId) {
-    PlanDetailResponse updatedPlan = planService.removeRecurrenceRule(planId);
-    return ResponseEntity.ok(updatedPlan);
+  public ResponseEntity<Void> removeRecurrenceRule(@PathVariable UUID planId) {
+    planService.removeRecurrenceRule(planId);
+    return ResponseEntity.noContent().build();
   }
 
   /**
@@ -157,5 +153,4 @@ public class PlanRestController {
   public ResponseEntity<List<PlanDetailResponse>> getSomedayPlans() {
     return ResponseEntity.ok(planService.getSomedayPlans());
   }
-
 }
