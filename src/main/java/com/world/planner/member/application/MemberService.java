@@ -36,7 +36,7 @@ public class MemberService {
     });
 
     // 해당 회원 정보로 JWT 토큰 발급
-    return jwtTokenProvider.createToken(member.getEmail());
+    return jwtTokenProvider.createToken(member.getId());
   }
 
   /**
