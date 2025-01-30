@@ -1,6 +1,7 @@
 package com.world.planner.auth.presentation;
 
 import com.world.planner.auth.application.KakaoAuthService;
+import com.world.planner.auth.presentation.dto.request.KakaoAuthRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,14 +11,14 @@ import java.util.Map;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Kakao Authentication", description = "카카오 로그인 및 사용자 인증 API")
 @RestController
-@RequestMapping("/auth/kakao")
+@RequestMapping("/api/auth/kakao")
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class KakaoAuthRestController {
 
@@ -32,11 +33,15 @@ public class KakaoAuthRestController {
       @ApiResponse(responseCode = "400", description = "잘못된 요청 (예: 인가 코드 누락)"),
       @ApiResponse(responseCode = "500", description = "서버 오류")
   })
-  @GetMapping("/callback")
-  public ResponseEntity<?> kakaoCallback(
+  @PostMapping
+  public ResponseEntity<?> authenticateAndGenerateToken(
       @Parameter(description = "카카오 OAuth 인증을 통해 발급된 인가 코드", required = true)
-      @RequestParam("code") String code
+      @RequestBody KakaoAuthRequest request // DTO를 통한 요청 본문 매핑
   ) {
+    String code = request.getCode();
+    if (code == null || code.isEmpty()) {
+      return ResponseEntity.badRequest().body("인가 코드를 제공하지 않았습니다.");
+    }
     return ResponseEntity.ok(Map.of("token", kakaoAuthService.generateJwtWithKakaoAuthCode(code)));
   }
 }

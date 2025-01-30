@@ -16,7 +16,7 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(auth -> auth
             .requestMatchers("/h2-console/**").permitAll() // H2 Console 요청 허용
-            .requestMatchers("/auth/kakao/callback").permitAll() // 해당 엔드포인트 허용
+            .requestMatchers("/api/auth/kakao").permitAll() // 해당 엔드포인트 허용
             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll() // Swagger 관련 경로 허용
             .requestMatchers("/api/members/social-login").permitAll()
             .anyRequest().authenticated() // 다른 요청은 인증 필요
