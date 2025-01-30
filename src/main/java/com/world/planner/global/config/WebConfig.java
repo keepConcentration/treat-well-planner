@@ -23,8 +23,10 @@ public class WebConfig implements WebMvcConfigurer {
       throw new IllegalStateException("CORS allowedOrigins 설정이 누락되었습니다.");
     }
     registry.addMapping("/**")
+        .allowedOrigins("http://localhost:3000")
         .allowedOrigins(allowedOrigins.toArray(new String[0])) // 프로파일에 따라 Origin이 동적으로 설정됨
         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-        .allowedHeaders("*");
+        .allowedHeaders("*")
+        .allowCredentials(true);
   }
 }

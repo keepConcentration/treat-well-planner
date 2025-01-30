@@ -32,4 +32,14 @@ server:
       enabled: true
       force: true
 jwt:
-  secret-key: WjdX/OI18DWmUGOl+U+FmRnYsc/bdFCrlwbQLpvPesnS6VLN2oU3Ps3xTDkcb8JriAP8UmlA5+Mla5YWARg8Sg==
+  secret-key: ENC(LpJ6Iz8zEA3gKFCyZocT6cPn8+GJFxdEDrfjeW6wtOyGkKs9UrGdduF2kxlxNB/a6fmVNxO7BfQ=)
+
+kakao:
+  auth:
+    client-id: ENC(1s4fH/o9b/BmmBJ0T4CQKEGGCBthHJK+iqin7OQuce7+gkArhFtRiIeM/hs6yy/cy/tu/xVFcUk=)
+    redirect-uri: http://localhost:8080/auth/kakao/callback
+
+jasypt:
+  encryptor:
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+    algorithm: PBEWithMD5AndDES
