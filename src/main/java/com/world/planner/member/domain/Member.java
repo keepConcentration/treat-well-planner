@@ -1,12 +1,16 @@
 package com.world.planner.member.domain;
 
 import com.world.planner.global.event.BaseEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,13 +26,26 @@ public class Member extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
-  @Column(nullable = false, unique = true)
+  @Column
   private String email;
 
-  @Column(nullable = false)
+  @Column
   private String name;
 
-  public void updateMemberInfo(String name) {
+  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<SocialAccount> socialAccounts = new ArrayList<>();
+
+  public void addSocialAccount(SocialAccount socialAccount) {
+    socialAccounts.add(socialAccount);
+    socialAccount.setMember(this); // 양방향 연관관계 설정
+  }
+
+  public void updateMemberEmail(String email) {
+    validateEmail(email);
+    this.email = email;
+  }
+
+  public void updateMemberName(String name) {
     validateName(name);
     this.name = name;
   }
@@ -36,6 +53,10 @@ public class Member extends BaseEntity {
   private Member(String email, String name) {
     this.email = email;
     this.name = name;
+  }
+
+  public static Member create() {
+    return new Member();
   }
 
   public static Member create(String email, String name) {

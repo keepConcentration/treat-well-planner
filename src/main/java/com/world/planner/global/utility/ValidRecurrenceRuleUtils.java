@@ -1,4 +1,4 @@
-package com.world.planner.global.util;
+package com.world.planner.global.utility;
 
 import com.world.planner.plan.domain.recurrence.RecurrenceRuleType;
 import java.time.LocalDate;

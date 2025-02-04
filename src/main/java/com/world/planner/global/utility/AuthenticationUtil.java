@@ -1,4 +1,4 @@
-package com.world.planner.global.util;
+package com.world.planner.global.utility;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
