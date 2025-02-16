@@ -18,8 +18,6 @@ import java.util.Optional;
 public class KakaoApiClient {
 
   private static final RestTemplate REST_TEMPLATE = new RestTemplate();
-  private static final String TOKEN_REQUEST_URL = "https://kauth.kakao.com/oauth/token";
-  private static final String USER_INFO_URL = "https://kapi.kakao.com/v2/user/me";
 
   @Value("${kakao.auth.client-id}")
   private String clientId;
@@ -27,28 +25,42 @@ public class KakaoApiClient {
   @Value("${kakao.auth.redirect-uri}")
   private String redirectUri;
 
-  public String getAccessToken(String code) {
-    // Access Token 요청을 위한 HTTP Header와 Body 구성
+  private String getAccessToken(String code) {
+    // 요청 헤더 설정
     HttpHeaders headers = createHeaders(MediaType.APPLICATION_FORM_URLENCODED, null);
+
+    // 요청 Body 설정
     MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
     body.add("grant_type", "authorization_code");
     body.add("client_id", clientId);
     body.add("redirect_uri", redirectUri);
     body.add("code", code);
+    // 만약 client_secret이 필요한 경우, 환경 변수에서 추가 설정
+    // body.add("client_secret", clientSecret);
 
-    // 액세스 토큰 요청
-    return executePostRequest(TOKEN_REQUEST_URL, new HttpEntity<>(body, headers), Map.class)
-        .map(responseBody -> (String) responseBody.get("access_token"))
-        .orElseThrow(() -> new IllegalStateException("Failed to retrieve access token: No access token in response."));
+    // Access Token 요청
+    final String tokenRequestUrl = "https://kauth.kakao.com/oauth/token";
+    Map<String, Object> response = executePostRequest(tokenRequestUrl, new HttpEntity<>(body, headers), Map.class)
+        .orElseThrow(() -> new IllegalStateException("Failed to retrieve Kakao tokens: No tokens in response."));
+
+    // 응답 데이터 처리
+    if (!response.containsKey("access_token")) {
+      throw new IllegalStateException("Invalid Kakao token response: Missing required tokens.");
+    }
+
+    return response.get("access_token").toString();
   }
 
-  public KakaoUser getUserInfo(String accessToken) {
+  public KakaoUser getUserInfo(String code) {
+    String accessToken = getAccessToken(code);
+
     // 사용자 정보 요청을 위한 HTTP Header만 구성
     HttpHeaders headers = createHeaders(null, accessToken);
     HttpEntity<?> request = new HttpEntity<>(headers);
 
     // 사용자 정보 요청 및 유저 생성
-    return executeGetRequest(USER_INFO_URL, request, Map.class)
+    final String userInfoUrl = "https://kapi.kakao.com/v2/user/me";
+    return executeGetRequest(userInfoUrl, request, Map.class)
         .map(this::mapToKakaoUser)
         .orElseThrow(() -> new IllegalStateException("Failed to retrieve user info: Response was invalid."));
   }

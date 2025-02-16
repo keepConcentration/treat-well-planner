@@ -1,6 +1,6 @@
 package com.world.planner.plan.application;
 
-import com.world.planner.global.util.ValidRecurrenceRuleUtils;
+import com.world.planner.global.utility.ValidRecurrenceRuleUtils;
 import com.world.planner.member.application.MemberService;
 import com.world.planner.member.domain.Member;
 import com.world.planner.plan.domain.Category;

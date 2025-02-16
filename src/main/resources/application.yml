@@ -37,7 +37,7 @@ jwt:
 kakao:
   auth:
     client-id: ENC(1s4fH/o9b/BmmBJ0T4CQKEGGCBthHJK+iqin7OQuce7+gkArhFtRiIeM/hs6yy/cy/tu/xVFcUk=)
-    redirect-uri: http://localhost:8080/auth/kakao/callback
+    redirect-uri: http://localhost:3000/auth/kakao/callback
 
 jasypt:
   encryptor:

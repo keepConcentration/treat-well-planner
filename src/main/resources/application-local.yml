@@ -49,4 +49,4 @@ cors:
 
 kakao:
   auth:
-    redirect-uri: http://localhost:8080/auth/kakao/callback
+    redirect-uri: http://localhost:3000/auth/kakao/callback

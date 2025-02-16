@@ -1,14 +1,14 @@
 package com.world.planner.global.event;
 
-public interface Auditable<UserID, Timestamp> {
+public interface Auditable<MemberId, Timestamp> {
 
-  UserID getCreatedBy();
+  MemberId getCreatedBy();
   Timestamp getCreatedAt();
-  UserID getUpdatedBy();
+  MemberId getUpdatedBy();
   Timestamp getUpdatedAt();
 
-  void setCreatedBy(UserID createdBy);
+  void setCreatedBy(MemberId createdBy);
   void setCreatedAt(Timestamp createdAt);
-  void setUpdatedBy(UserID updatedBy);
+  void setUpdatedBy(MemberId updatedBy);
   void setUpdatedAt(Timestamp updatedAt);
 }

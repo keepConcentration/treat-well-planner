@@ -1,7 +1,6 @@
 package com.world.planner.member.presentation;
 
 import com.world.planner.member.application.MemberService;
-import com.world.planner.member.presentation.dto.request.SocialLoginRequest;
 import com.world.planner.member.presentation.dto.request.UpdateMemberRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,26 +23,6 @@ import org.springframework.web.bind.annotation.*;
 public class MemberRestController {
 
   private final MemberService memberService;
-
-  @Operation(
-      summary = "소셜 로그인 및 회원가입",
-      description = "소셜 로그인 후 JWT 토큰을 반환합니다. 필요 시 회원가입까지 자동으로 진행됩니다.",
-      tags = {"Member API"}
-  )
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema = @Schema(implementation = String.class))),
-      @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터", content = @Content)
-  })
-  @io.swagger.v3.oas.annotations.parameters.RequestBody(
-      description = "소셜 로그인 요청 데이터를 포함합니다.",
-      required = true,
-      content = @Content(mediaType = "application/json", schema = @Schema(implementation = SocialLoginRequest.class))
-  )
-  @PostMapping("/social-login")
-  public ResponseEntity<String> socialLogin(@RequestBody SocialLoginRequest request) {
-    String jwtToken = memberService.socialLogin(request.getEmail(), request.getName());
-    return ResponseEntity.ok(jwtToken);
-  }
 
   /**
    * 회원 탈퇴 API
